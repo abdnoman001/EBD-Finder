@@ -1,7 +1,8 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface Book {
   title: string;
@@ -24,29 +25,93 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
-  const searchBooks = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query && !author) return;
+  // Dynamic API URL state
+  const [apiUrl, setApiUrl] = useState("http://127.0.0.1:8000");
+  const [showSettings, setShowSettings] = useState(false);
+  const [tempUrl, setTempUrl] = useState("");
 
+  const fetchBooks = async (q: string, a: string, s: string) => {
+    if (!q && !a) return;
     setLoading(true);
     setSearched(true);
     setBooks([]);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1);
 
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/search/`, {
-        params: {
-          q: query,
-          author: author,
-          store: store
-        }
+      const response = await axios.get(`${apiUrl}/api/search/`, {
+        params: { q, author: a, store: s }
       });
       setBooks(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);
+      alert(`Error connecting to backend at ${apiUrl}. Check your settings.`);
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    // Load API URL from local storage or env
+    const savedUrl = localStorage.getItem("api_url");
+    const envUrl = process.env.NEXT_PUBLIC_API_URL;
+    const initialUrl = savedUrl || envUrl || "http://127.0.0.1:8000";
+    setApiUrl(initialUrl);
+    setTempUrl(initialUrl);
+
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    const a = params.get("author");
+    const s = params.get("store");
+
+    if (q || a) {
+      setQuery(q || "");
+      setAuthor(a || "");
+      setStore(s || "all");
+      // Pass the determined URL explicitly to avoid closure staleness if called immediately
+      // But fetchBooks uses 'apiUrl' state which might not be updated yet in this render cycle if we just set it.
+      // So we pass the url to a modified fetchBooks or just wait. 
+      // Better: define fetchBooks inside or use a ref. 
+      // For simplicity, we'll call axios directly here or rely on the fact that initial render might be fast enough? 
+      // Actually, let's just use the variable 'initialUrl' for the first fetch.
+
+      const performInitialFetch = async () => {
+        setLoading(true);
+        setSearched(true);
+        try {
+          const response = await axios.get(`${initialUrl}/api/search/`, {
+            params: { q: q || "", author: a || "", store: s || "all" }
+          });
+          setBooks(response.data);
+        } catch (error) {
+          console.error("Error fetching books:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      performInitialFetch();
+    }
+  }, []);
+
+  const saveSettings = () => {
+    // Remove trailing slash
+    const cleanUrl = tempUrl.replace(/\/$/, "");
+    localStorage.setItem("api_url", cleanUrl);
+    setApiUrl(cleanUrl);
+    setShowSettings(false);
+    alert("API URL saved!");
+  };
+
+  const searchBooks = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Update URL
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (author) params.set("author", author);
+    if (store) params.set("store", store);
+    window.history.pushState({}, "", `?${params.toString()}`);
+
+    fetchBooks(query, author, store);
   };
 
   // Pagination logic
@@ -57,9 +122,49 @@ export default function Home() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50 text-gray-900">
-      <h1 className="text-4xl font-bold mb-8 text-blue-600">E-Finder</h1>
+    <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50 text-gray-900 relative">
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={() => setShowSettings(!showSettings)}
+          className="text-sm text-gray-500 hover:text-blue-600 underline"
+        >
+          {showSettings ? "Close Settings" : "API Config"}
+        </button>
+      </div>
+
+      {showSettings && (
+        <div className="w-full max-w-md mb-8 p-4 bg-white border border-blue-200 rounded-lg shadow-sm">
+          <h3 className="font-semibold mb-2 text-gray-700">Backend API URL</h3>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={tempUrl}
+              onChange={(e) => setTempUrl(e.target.value)}
+              className="flex-1 p-2 border rounded text-sm"
+              placeholder="https://your-backend-url..."
+            />
+            <button
+              onClick={saveSettings}
+              className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+            >
+              Save
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            Current: {apiUrl} <br />
+            Use this to connect to a forwarded backend (e.g. from VS Code) on mobile.
+          </p>
+        </div>
+      )}
+
+      <Link href="/">
+        <h1 className="text-4xl font-bold mb-8 text-blue-600 cursor-pointer hover:text-blue-700 transition">E-Finder</h1>
+      </Link>
 
       <form onSubmit={searchBooks} className="w-full max-w-2xl flex flex-col gap-4 mb-8 bg-white p-6 rounded-xl shadow-md">
         <div className="flex flex-col md:flex-row gap-4">
@@ -94,13 +199,22 @@ export default function Home() {
             </select>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 disabled:bg-blue-400 transition"
-          >
-            {loading ? "Searching..." : "Search Books"}
-          </button>
+          <div className="flex gap-2 w-full md:w-auto">
+            <button
+              type="button"
+              onClick={handleRefresh}
+              className="w-full md:w-auto px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition"
+            >
+              Refresh
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 disabled:bg-blue-400 transition"
+            >
+              {loading ? "Searching..." : "Search"}
+            </button>
+          </div>
         </div>
       </form>
 
