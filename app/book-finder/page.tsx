@@ -55,10 +55,8 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15;
 
-    // Dynamic API URL state
-    const [apiUrl, setApiUrl] = useState("http://127.0.0.1:8000");
-    const [showSettings, setShowSettings] = useState(false);
-    const [tempUrl, setTempUrl] = useState("");
+    // API URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
     const fetchBooks = async (q: string, a: string, s: string) => {
         if (!q && !a) return;
@@ -81,13 +79,6 @@ export default function Home() {
     };
 
     useEffect(() => {
-        // Load API URL from local storage or env
-        const savedUrl = localStorage.getItem("api_url");
-        const envUrl = process.env.NEXT_PUBLIC_API_URL;
-        const initialUrl = savedUrl || envUrl || "http://127.0.0.1:8000";
-        setApiUrl(initialUrl);
-        setTempUrl(initialUrl);
-
         const params = new URLSearchParams(window.location.search);
         const q = params.get("q");
         const a = params.get("author");
@@ -97,18 +88,12 @@ export default function Home() {
             setQuery(q || "");
             setAuthor(a || "");
             setStore(s || "all");
-            // Pass the determined URL explicitly to avoid closure staleness if called immediately
-            // But fetchBooks uses 'apiUrl' state which might not be updated yet in this render cycle if we just set it.
-            // So we pass the url to a modified fetchBooks or just wait. 
-            // Better: define fetchBooks inside or use a ref. 
-            // For simplicity, we'll call axios directly here or rely on the fact that initial render might be fast enough? 
-            // Actually, let's just use the variable 'initialUrl' for the first fetch.
 
             const performInitialFetch = async () => {
                 setLoading(true);
                 setSearched(true);
                 try {
-                    const response = await axios.get(`${initialUrl}/api/search/`, {
+                    const response = await axios.get(`${apiUrl}/api/search/`, {
                         params: { q: q || "", author: a || "", store: s || "all" }
                     });
                     setBooks(response.data);
@@ -121,15 +106,6 @@ export default function Home() {
             performInitialFetch();
         }
     }, []);
-
-    const saveSettings = () => {
-        // Remove trailing slash
-        const cleanUrl = tempUrl.replace(/\/$/, "");
-        localStorage.setItem("api_url", cleanUrl);
-        setApiUrl(cleanUrl);
-        setShowSettings(false);
-        alert("API URL saved!");
-    };
 
     const searchBooks = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -181,44 +157,6 @@ export default function Home() {
                     <span className="font-medium">Back to Home</span>
                 </Link>
             </div>
-
-            <div className="absolute top-4 right-4">
-                <button
-                    onClick={() => setShowSettings(!showSettings)}
-                    className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-100 transition"
-                    title="API Configuration"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.581-.495.644-.869l.214-1.281z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
-            </div>
-
-            {showSettings && (
-                <div className="w-full max-w-md mb-8 p-4 bg-white border border-blue-200 rounded-lg shadow-sm">
-                    <h3 className="font-semibold mb-2 text-gray-700">Backend API URL</h3>
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            value={tempUrl}
-                            onChange={(e) => setTempUrl(e.target.value)}
-                            className="flex-1 p-2 border rounded text-sm"
-                            placeholder="https://your-backend-url..."
-                        />
-                        <button
-                            onClick={saveSettings}
-                            className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                        >
-                            Save
-                        </button>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                        Current: {apiUrl} <br />
-                        Use this to connect to a forwarded backend (e.g. from VS Code) on mobile.
-                    </p>
-                </div>
-            )}
 
             <Link href="/">
                 <h1 className="text-4xl font-bold mb-8 text-blue-600 cursor-pointer hover:text-blue-700 transition">E-Finder</h1>
