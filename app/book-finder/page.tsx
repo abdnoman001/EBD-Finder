@@ -70,9 +70,21 @@ export default function Home() {
                 params: { q, author: a, store: s }
             });
             setBooks(response.data);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error fetching books:", error);
-            alert(`Error connecting to backend at ${apiUrl}. Check your settings.`);
+            let errorMessage = "Error connecting to backend.";
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                errorMessage = `Server Error: ${error.response.status} - ${error.response.statusText}`;
+            } else if (error.request) {
+                // The request was made but no response was received
+                errorMessage = "No response from server. The backend might be waking up (Render free tier) or is unreachable.";
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                errorMessage = `Request Error: ${error.message}`;
+            }
+            alert(`${errorMessage} URL: ${apiUrl}`);
         } finally {
             setLoading(false);
         }
