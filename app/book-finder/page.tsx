@@ -187,14 +187,14 @@ export default function Home() {
                         />
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between ">
                         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                             <div className="flex items-center gap-2 w-full sm:w-auto">
                                 <label className="font-medium text-gray-700 whitespace-nowrap">Store:</label>
                                 <select
                                     value={store}
                                     onChange={(e) => setStore(e.target.value)}
-                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto"
+                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto hover:cursor-pointer"
                                 >
                                     <option value="all">All Stores</option>
                                     <option value="rokomari">Rokomari</option>
@@ -208,7 +208,7 @@ export default function Home() {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto "
+                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto hover:cursor-pointer"
                                 >
                                     <option value="relevance">Relevance</option>
                                     <option value="price_asc">Price: Low to High</option>
@@ -221,21 +221,21 @@ export default function Home() {
                             <button
                                 type="button"
                                 onClick={handleClear}
-                                className="flex-1 md:flex-none px-4 py-3 bg-red-50 text-red-600 font-semibold rounded-xl hover:bg-red-100 transition border border-red-100"
+                                className="flex-1 md:flex-none px-4 py-3 bg-red-50 text-red-600 font-semibold rounded-xl hover:bg-red-100 transition border border-red-100 hover:cursor-pointer"
                             >
                                 Clear
                             </button>
                             <button
                                 type="button"
                                 onClick={handleRefresh}
-                                className="flex-1 md:flex-none px-6 py-3 bg-gray-50 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition border border-gray-200"
+                                className="flex-1 md:flex-none px-6 py-3 bg-gray-50 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition border border-gray-200 hover:cursor-pointer"
                             >
                                 Refresh
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex-1 md:flex-none px-8 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md disabled:opacity-70"
+                                className="flex-1 md:flex-none px-8 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md disabled:opacity-70 hover:cursor-pointer"
                             >
                                 {loading ? "Searching..." : "Search"}
                             </button>
