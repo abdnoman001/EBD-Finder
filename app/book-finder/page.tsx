@@ -24,17 +24,17 @@ const BookImage = ({ src, alt, source }: { src: string, alt: string, source: str
     }, [src]);
 
     return (
-        <div className="relative h-64 w-full bg-gray-200">
+        <div className="relative h-64 w-full bg-white/50 flex items-center justify-center p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
                 src={hasError || !imgSrc ? "https://via.placeholder.com/150?text=No+Image" : imgSrc}
                 alt={alt}
-                className="object-contain w-full h-full p-4"
+                className="object-contain max-h-full max-w-full drop-shadow-sm"
                 onError={() => setHasError(true)}
             />
-            <span className={`absolute top-2 right-2 px-2 py-1 text-xs font-bold text-white rounded ${source === 'Rokomari' ? 'bg-green-600' :
-                source === 'Wafilife' ? 'bg-cyan-600' :
-                    source === 'Batighor' ? 'bg-red-600' : 'bg-orange-500'
+            <span className={`absolute top-2 right-2 px-2 py-1 text-xs font-bold text-white rounded shadow-sm ${source === 'Rokomari' ? 'bg-green-600/90' :
+                source === 'Wafilife' ? 'bg-cyan-600/90' :
+                    source === 'Batighor' ? 'bg-red-600/90' : 'bg-orange-500/90'
                 }`}>
                 {source}
             </span>
@@ -74,14 +74,10 @@ export default function Home() {
             console.error("Error fetching books:", error);
             let errorMessage = "Error connecting to backend.";
             if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 errorMessage = `Server Error: ${error.response.status} - ${error.response.statusText}`;
             } else if (error.request) {
-                // The request was made but no response was received
                 errorMessage = "No response from server. The backend might be waking up (Render free tier) or is unreachable.";
             } else {
-                // Something happened in setting up the request that triggered an Error
                 errorMessage = `Request Error: ${error.message}`;
             }
             alert(`${errorMessage} URL: ${apiUrl}`);
@@ -160,183 +156,180 @@ export default function Home() {
     };
 
     return (
-        <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50 text-gray-900 relative">
-            <div className="absolute top-4 left-4">
-                <Link href="/" className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition border border-gray-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                    </svg>
-                    <span className="font-medium">Back to Home</span>
-                </Link>
-            </div>
-
-            <Link href="/">
-                <h1 className="text-4xl font-bold mb-8 text-blue-600 cursor-pointer hover:text-blue-700 transition">E-Finder</h1>
-            </Link>
-
-            <form onSubmit={searchBooks} className="w-full max-w-2xl flex flex-col gap-4 mb-8 bg-white p-6 rounded-xl shadow-md">
-                <div className="flex flex-col md:flex-row gap-4">
-                    <input
-                        type="text"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Book Title..."
-                        className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        placeholder="Author Name..."
-                        className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+        <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative">
+            <div className="w-full max-w-7xl flex flex-col items-center">
+                <div className="w-full flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <Link href="/" className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm text-gray-700 rounded-lg shadow-sm hover:bg-white transition border border-white/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        </svg>
+                        <span className="font-medium">Back</span>
+                    </Link>
+                    <h1 className="text-3xl font-bold text-gray-800 drop-shadow-sm">Book Finder</h1>
+                    <div className="w-24 hidden md:block"></div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                    <div className="flex items-center gap-4 flex-wrap">
-                        <div className="flex items-center gap-2">
-                            <label className="font-medium text-gray-700">Store:</label>
-                            <select
-                                value={store}
-                                onChange={(e) => setStore(e.target.value)}
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="all">All Stores</option>
-                                <option value="rokomari">Rokomari</option>
-                                <option value="wafilife">Wafilife</option>
-                                <option value="batighor">Batighor</option>
-                            </select>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <label className="font-medium text-gray-700">Sort:</label>
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="relevance">Relevance</option>
-                                <option value="price_asc">Price: Low to High</option>
-                                <option value="price_desc">Price: High to Low</option>
-                            </select>
-                        </div>
+                <form onSubmit={searchBooks} className="w-full max-w-4xl flex flex-col gap-4 mb-12 glass-card p-6 md:p-8 rounded-2xl shadow-lg">
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <input
+                            type="text"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder="Book Title..."
+                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition"
+                        />
+                        <input
+                            type="text"
+                            value={author}
+                            onChange={(e) => setAuthor(e.target.value)}
+                            placeholder="Author Name..."
+                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition"
+                        />
                     </div>
 
-                    <div className="flex gap-2 w-full md:w-auto">
-                        <button
-                            type="button"
-                            onClick={handleClear}
-                            className="w-full md:w-auto px-4 py-3 bg-red-100 text-red-700 font-semibold rounded-lg shadow-md hover:bg-red-200 transition"
-                        >
-                            Clear
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleRefresh}
-                            className="w-full md:w-auto px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition"
-                        >
-                            Refresh
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 disabled:bg-blue-400 transition"
-                        >
-                            {loading ? "Searching..." : "Search"}
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            {loading && (
-                <div className="flex justify-center items-center mb-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                </div>
-            )}
-
-            {!loading && searched && books.length === 0 && (
-                <p className="text-lg text-gray-600">No books found.</p>
-            )}
-
-            {!loading && books.length > 0 && (
-                <div className="w-full max-w-6xl mb-4 flex justify-between items-center">
-                    <p className="text-gray-600">Found {books.length} results</p>
-                    <p className="text-gray-600">Page {currentPage} of {totalPages}</p>
-                </div>
-            )}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-6xl mb-8">
-                {currentBooks.map((book, index) => (
-                    <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition border border-gray-100 flex flex-col">
-                        <BookImage src={book.image_url} alt={book.title} source={book.source} />
-                        <div className="p-4 flex flex-col flex-grow">
-                            <h2 className="text-lg font-semibold mb-1 line-clamp-2" title={book.title}>{book.title}</h2>
-                            {book.author && <p className="text-sm text-gray-600 mb-2 line-clamp-1">{book.author}</p>}
-                            <div className="mt-auto flex items-center justify-between">
-                                <span className="text-xl font-bold text-gray-800">৳ {book.price}</span>
-                                <a
-                                    href={book.product_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded hover:bg-gray-700 transition"
+                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <label className="font-medium text-gray-700 whitespace-nowrap">Store:</label>
+                                <select
+                                    value={store}
+                                    onChange={(e) => setStore(e.target.value)}
+                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto"
                                 >
-                                    Buy Now
-                                </a>
+                                    <option value="all">All Stores</option>
+                                    <option value="rokomari">Rokomari</option>
+                                    <option value="wafilife">Wafilife</option>
+                                    <option value="batighor">Batighor</option>
+                                </select>
+                            </div>
+
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <label className="font-medium text-gray-700 whitespace-nowrap">Sort:</label>
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
+                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto"
+                                >
+                                    <option value="relevance">Relevance</option>
+                                    <option value="price_asc">Price: Low to High</option>
+                                    <option value="price_desc">Price: High to Low</option>
+                                </select>
                             </div>
                         </div>
+
+                        <div className="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
+                            <button
+                                type="button"
+                                onClick={handleClear}
+                                className="flex-1 md:flex-none px-4 py-3 bg-red-50 text-red-600 font-semibold rounded-xl hover:bg-red-100 transition border border-red-100"
+                            >
+                                Clear
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleRefresh}
+                                className="flex-1 md:flex-none px-6 py-3 bg-gray-50 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition border border-gray-200"
+                            >
+                                Refresh
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="flex-1 md:flex-none px-8 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md disabled:opacity-70"
+                            >
+                                {loading ? "Searching..." : "Search"}
+                            </button>
+                        </div>
                     </div>
-                ))}
-            </div>
+                </form>
 
-            {/* Pagination Controls */}
-            {!loading && books.length > itemsPerPage && (
-                <div className="flex gap-2 justify-center items-center mt-4">
-                    <button
-                        onClick={() => paginate(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 hover:bg-gray-100"
-                    >
-                        Previous
-                    </button>
-
-                    <div className="flex gap-1">
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                            // Logic to show a window of pages around current page
-                            let pageNum = i + 1;
-                            if (totalPages > 5) {
-                                if (currentPage > 3) {
-                                    pageNum = currentPage - 3 + i;
-                                }
-                                if (pageNum > totalPages) {
-                                    pageNum = totalPages - 4 + i;
-                                }
-                            }
-
-                            // Simple logic for now: just show first 5 or if current is high, show range
-                            // Let's keep it simple: Show current, prev, next, first, last logic is complex for simple UI
-                            // Just showing a simple range or all if small
-
-                            return (
-                                <button
-                                    key={pageNum}
-                                    onClick={() => paginate(pageNum)}
-                                    className={`w-10 h-10 rounded-lg ${currentPage === pageNum ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-100'}`}
-                                >
-                                    {pageNum}
-                                </button>
-                            );
-                        })}
+                {loading && (
+                    <div className="flex justify-center items-center mb-8">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                     </div>
+                )}
 
-                    <button
-                        onClick={() => paginate(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 hover:bg-gray-100"
-                    >
-                        Next
-                    </button>
+                {!loading && searched && books.length === 0 && (
+                    <div className="glass-card p-8 rounded-xl text-center w-full max-w-2xl">
+                        <p className="text-xl text-gray-600">No books found matching your criteria.</p>
+                    </div>
+                )}
+
+                {!loading && books.length > 0 && (
+                    <div className="w-full mb-6 flex justify-between items-center px-2">
+                        <p className="text-gray-600 font-medium">Found {books.length} results</p>
+                        <p className="text-gray-600 font-medium">Page {currentPage} of {totalPages}</p>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full mb-8">
+                    {currentBooks.map((book, index) => (
+                        <div key={index} className="glass-card bg-white/80 rounded-xl overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-xl">
+                            <BookImage src={book.image_url} alt={book.title} source={book.source} />
+                            <div className="p-5 flex flex-col flex-grow">
+                                <h2 className="text-lg font-bold text-gray-800 mb-1 line-clamp-2 leading-tight" title={book.title}>{book.title}</h2>
+                                {book.author && <p className="text-sm text-gray-500 mb-3 line-clamp-1">{book.author}</p>}
+                                <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
+                                    <span className="text-xl font-bold text-blue-600">৳ {book.price}</span>
+                                    <a
+                                        href={book.product_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition"
+                                    >
+                                        Buy Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            )}
+
+                {/* Pagination Controls */}
+                {!loading && books.length > itemsPerPage && (
+                    <div className="flex gap-2 justify-center items-center mt-4 mb-12 flex-wrap">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50 transition shadow-sm"
+                        >
+                            Previous
+                        </button>
+
+                        <div className="flex gap-1 overflow-x-auto max-w-[200px] sm:max-w-none pb-2 sm:pb-0">
+                            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                let pageNum = i + 1;
+                                if (totalPages > 5) {
+                                    if (currentPage > 3) {
+                                        pageNum = currentPage - 3 + i;
+                                    }
+                                    if (pageNum > totalPages) {
+                                        pageNum = totalPages - 4 + i;
+                                    }
+                                }
+
+                                return (
+                                    <button
+                                        key={pageNum}
+                                        onClick={() => paginate(pageNum)}
+                                        className={`w-10 h-10 rounded-lg transition flex-shrink-0 ${currentPage === pageNum ? 'bg-blue-600 text-white font-bold shadow-md' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50 transition shadow-sm"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
+            </div>
         </main>
     );
 }

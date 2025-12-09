@@ -2,12 +2,16 @@ import Link from "next/link";
 
 export default function Page() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
-            <h1 className="text-4xl font-bold mb-4 text-gray-800">Shoe Finder</h1>
-            <p className="text-xl text-gray-600 mb-8">Coming Soon...</p>
-            <Link href="/" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                Back to Home
-            </Link>
+        <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50">
+            <div className="glass-card p-12 rounded-2xl max-w-lg w-full text-center shadow-xl">
+                <h1 className="text-5xl font-bold mb-6 text-gray-800 drop-shadow-sm">Shoe Finder</h1>
+                <p className="text-xl text-gray-600 mb-10 font-light">
+                    Step into style soon! We are curating the best shoe collection for you.
+                </p>
+                <Link href="/" className="px-8 py-3 bg-orange-600 text-white font-semibold rounded-xl hover:bg-orange-700 transition shadow-md">
+                    Back to Home
+                </Link>
+            </div>
         </main>
     );
 }
