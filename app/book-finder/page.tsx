@@ -176,14 +176,14 @@ export default function Home() {
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Book Title..."
-                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition"
+                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition placeholder-gray-600"
                         />
                         <input
                             type="text"
                             value={author}
                             onChange={(e) => setAuthor(e.target.value)}
                             placeholder="Author Name..."
-                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition"
+                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition placeholder-gray-600"
                         />
                     </div>
 
@@ -208,7 +208,7 @@ export default function Home() {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto"
+                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto "
                                 >
                                     <option value="relevance">Relevance</option>
                                     <option value="price_asc">Price: Low to High</option>

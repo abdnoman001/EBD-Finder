@@ -27,7 +27,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       <div className="w-full max-w-6xl flex flex-col items-center mt-10 mb-16">
         <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 text-center drop-shadow-sm">
-          E-Finder Hub
+          EV-Finder
         </h1>
         <p className="text-lg md:text-xl text-gray-600 text-center max-w-2xl font-light leading-relaxed">
           Your ultimate destination for finding the best deals on books, fashion, and electronics.
