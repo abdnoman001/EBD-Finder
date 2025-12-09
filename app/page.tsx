@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const finders = [
@@ -8,12 +8,6 @@ export default function Home() {
       description: "Find the best prices for books across multiple stores.",
       href: "/book-finder",
       image: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      name: "Dress Finder",
-      description: "Discover trendy dresses for men and women.",
-      href: "/dress-finder",
-      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=800&q=80",
     },
     {
       name: "Shoe Finder",
