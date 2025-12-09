@@ -156,45 +156,45 @@ export default function Home() {
     };
 
     return (
-        <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative">
+        <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 relative transition-colors duration-300">
             <div className="w-full max-w-7xl flex flex-col items-center">
                 <div className="w-full flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                    <Link href="/" className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm text-gray-700 rounded-lg shadow-sm hover:bg-white transition border border-white/50">
+                    <Link href="/" className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-200 rounded-lg shadow-sm hover:bg-white dark:hover:bg-gray-700 transition border border-white/50 dark:border-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                         </svg>
                         <span className="font-medium">Back</span>
                     </Link>
-                    <h1 className="text-3xl font-bold text-gray-800 drop-shadow-sm">Book Finder</h1>
+                    <h1 className="text-3xl font-bold text-gray-800 dark:text-white drop-shadow-sm">Book Finder</h1>
                     <div className="w-24 hidden md:block"></div>
                 </div>
 
-                <form onSubmit={searchBooks} className="w-full max-w-4xl flex flex-col gap-4 mb-12 glass-card p-6 md:p-8 rounded-2xl shadow-lg">
+                <form onSubmit={searchBooks} className="w-full max-w-4xl flex flex-col gap-4 mb-12 glass-card p-6 md:p-8 rounded-2xl shadow-lg dark:bg-gray-800/60 dark:border-gray-700">
                     <div className="flex flex-col md:flex-row gap-4">
                         <input
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Book Title..."
-                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition placeholder-gray-600"
+                            className="flex-1 p-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-700/80 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition placeholder-gray-600 dark:placeholder-gray-400"
                         />
                         <input
                             type="text"
                             value={author}
                             onChange={(e) => setAuthor(e.target.value)}
                             placeholder="Author Name..."
-                            className="flex-1 p-4 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition placeholder-gray-600"
+                            className="flex-1 p-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-700/80 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition placeholder-gray-600 dark:placeholder-gray-400"
                         />
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-between ">
                         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                             <div className="flex items-center gap-2 w-full sm:w-auto">
-                                <label className="font-medium text-gray-700 whitespace-nowrap">Store:</label>
+                                <label className="font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Store:</label>
                                 <select
                                     value={store}
                                     onChange={(e) => setStore(e.target.value)}
-                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto hover:cursor-pointer"
+                                    className="p-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-700/80 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto hover:cursor-pointer"
                                 >
                                     <option value="all">All Stores</option>
                                     <option value="rokomari">Rokomari</option>
@@ -204,11 +204,11 @@ export default function Home() {
                             </div>
 
                             <div className="flex items-center gap-2 w-full sm:w-auto">
-                                <label className="font-medium text-gray-700 whitespace-nowrap">Sort:</label>
+                                <label className="font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Sort:</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="p-2 rounded-lg border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto hover:cursor-pointer"
+                                    className="p-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-700/80 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-full sm:w-auto hover:cursor-pointer"
                                 >
                                     <option value="relevance">Relevance</option>
                                     <option value="price_asc">Price: Low to High</option>
@@ -221,14 +221,14 @@ export default function Home() {
                             <button
                                 type="button"
                                 onClick={handleClear}
-                                className="flex-1 md:flex-none px-4 py-3 bg-red-50 text-red-600 font-semibold rounded-xl hover:bg-red-100 transition border border-red-100 hover:cursor-pointer"
+                                className="flex-1 md:flex-none px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition border border-red-100 dark:border-red-900/30 hover:cursor-pointer"
                             >
                                 Clear
                             </button>
                             <button
                                 type="button"
                                 onClick={handleRefresh}
-                                className="flex-1 md:flex-none px-6 py-3 bg-gray-50 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition border border-gray-200 hover:cursor-pointer"
+                                className="flex-1 md:flex-none px-6 py-3 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition border border-gray-200 dark:border-gray-600 hover:cursor-pointer"
                             >
                                 Refresh
                             </button>
@@ -250,32 +250,32 @@ export default function Home() {
                 )}
 
                 {!loading && searched && books.length === 0 && (
-                    <div className="glass-card p-8 rounded-xl text-center w-full max-w-2xl">
-                        <p className="text-xl text-gray-600">No books found matching your criteria.</p>
+                    <div className="glass-card p-8 rounded-xl text-center w-full max-w-2xl dark:bg-gray-800/60 dark:border-gray-700">
+                        <p className="text-xl text-gray-600 dark:text-gray-300">No books found matching your criteria.</p>
                     </div>
                 )}
 
                 {!loading && books.length > 0 && (
                     <div className="w-full mb-6 flex justify-between items-center px-2">
-                        <p className="text-gray-600 font-medium">Found {books.length} results</p>
-                        <p className="text-gray-600 font-medium">Page {currentPage} of {totalPages}</p>
+                        <p className="text-gray-600 dark:text-gray-400 font-medium">Found {books.length} results</p>
+                        <p className="text-gray-600 dark:text-gray-400 font-medium">Page {currentPage} of {totalPages}</p>
                     </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full mb-8">
                     {currentBooks.map((book, index) => (
-                        <div key={index} className="glass-card bg-white/80 rounded-xl overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-xl">
+                        <div key={index} className="glass-card rounded-xl overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-xl dark:bg-gray-800/80 dark:border-gray-700">
                             <BookImage src={book.image_url} alt={book.title} source={book.source} />
                             <div className="p-5 flex flex-col flex-grow">
-                                <h2 className="text-lg font-bold text-gray-800 mb-1 line-clamp-2 leading-tight" title={book.title}>{book.title}</h2>
-                                {book.author && <p className="text-sm text-gray-500 mb-3 line-clamp-1">{book.author}</p>}
-                                <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
-                                    <span className="text-xl font-bold text-blue-600">৳ {book.price}</span>
+                                <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-1 line-clamp-2 leading-tight" title={book.title}>{book.title}</h2>
+                                {book.author && <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-1">{book.author}</p>}
+                                <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                                    <span className="text-xl font-bold text-blue-600 dark:text-blue-400">৳ {book.price}</span>
                                     <a
                                         href={book.product_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition"
+                                        className="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition"
                                     >
                                         Buy Now
                                     </a>
@@ -291,7 +291,7 @@ export default function Home() {
                         <button
                             onClick={() => paginate(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50 transition shadow-sm"
+                            className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm text-gray-700 dark:text-gray-200"
                         >
                             Previous
                         </button>
@@ -312,7 +312,7 @@ export default function Home() {
                                     <button
                                         key={pageNum}
                                         onClick={() => paginate(pageNum)}
-                                        className={`w-10 h-10 rounded-lg transition flex-shrink-0 ${currentPage === pageNum ? 'bg-blue-600 text-white font-bold shadow-md' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                                        className={`w-10 h-10 rounded-lg transition flex-shrink-0 ${currentPage === pageNum ? 'bg-blue-600 text-white font-bold shadow-md' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'}`}
                                     >
                                         {pageNum}
                                     </button>
@@ -323,7 +323,7 @@ export default function Home() {
                         <button
                             onClick={() => paginate(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50 transition shadow-sm"
+                            className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm text-gray-700 dark:text-gray-200"
                         >
                             Next
                         </button>
