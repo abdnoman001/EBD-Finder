@@ -47,6 +47,7 @@ export default function Home() {
     const [author, setAuthor] = useState("");
     const [store, setStore] = useState("all");
     const [books, setBooks] = useState<Book[]>([]);
+    const [allBooks, setAllBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(false);
     const [searched, setSearched] = useState(false);
     const [sortBy, setSortBy] = useState("relevance");
@@ -58,18 +59,19 @@ export default function Home() {
     // API URL
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
-    const fetchBooks = async (q: string, a: string, s: string) => {
+    const fetchBooks = async (q: string, a: string) => {
         if (!q && !a) return;
         setLoading(true);
         setSearched(true);
         setBooks([]);
+        setAllBooks([]);
         setCurrentPage(1);
 
         try {
             const response = await axios.get(`${apiUrl}/api/search/`, {
-                params: { q, author: a, store: s }
+                params: { q, author: a, store: 'all' }
             });
-            setBooks(response.data);
+            setAllBooks(response.data);
         } catch (error: any) {
             console.error("Error fetching books:", error);
             let errorMessage = "Error connecting to backend.";
@@ -86,6 +88,16 @@ export default function Home() {
         }
     };
 
+    // Filter books when store or allBooks changes
+    useEffect(() => {
+        if (store === 'all') {
+            setBooks(allBooks);
+        } else {
+            setBooks(allBooks.filter(book => book.source.toLowerCase() === store.toLowerCase()));
+        }
+        setCurrentPage(1);
+    }, [store, allBooks]);
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const q = params.get("q");
@@ -96,22 +108,7 @@ export default function Home() {
             setQuery(q || "");
             setAuthor(a || "");
             setStore(s || "all");
-
-            const performInitialFetch = async () => {
-                setLoading(true);
-                setSearched(true);
-                try {
-                    const response = await axios.get(`${apiUrl}/api/search/`, {
-                        params: { q: q || "", author: a || "", store: s || "all" }
-                    });
-                    setBooks(response.data);
-                } catch (error) {
-                    console.error("Error fetching books:", error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-            performInitialFetch();
+            fetchBooks(q || "", a || "");
         }
     }, []);
 
@@ -125,7 +122,7 @@ export default function Home() {
         if (store) params.set("store", store);
         window.history.pushState({}, "", `?${params.toString()}`);
 
-        fetchBooks(query, author, store);
+        fetchBooks(query, author);
     };
 
     // Sorting & Pagination logic
@@ -143,7 +140,7 @@ export default function Home() {
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     const handleRefresh = () => {
-        fetchBooks(query, author, store);
+        fetchBooks(query, author);
     };
 
     const handleClear = () => {
